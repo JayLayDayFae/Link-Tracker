@@ -3,66 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Directory</title>
+    <title>Project Registry</title>
     <style>
+        :root {
+            --bg: #f9fafb;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --accent: #2563eb;
+        }
+
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+            margin: 0;
+            padding: 48px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
-            min-height: 100vh;
         }
-        h1 { margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase; color: #4ecca3; }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            letter-spacing: -0.025em;
+        }
+
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
             width: 100%;
             max-width: 1000px;
         }
+
         .card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
             padding: 20px;
-            border-radius: 12px;
-            text-decoration: none;
-            color: #eee;
-            transition: all 0.3s ease;
+            position: relative;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-size: 0.9rem;
-            word-break: break-all;
         }
+
         .card:hover {
-            background: rgba(78, 204, 163, 0.2);
-            border-color: #4ecca3;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border-color: #d1d5db;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .link-text {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            word-break: break-all;
+            padding-right: 40px;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            color: var(--text-muted);
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #f3f4f6;
+            color: var(--accent);
+        }
+
+        .copy-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Tooltip style for "Copied!" */
+        .copy-btn::after {
+            content: 'Copied!';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111827;
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .copy-btn.active::after {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
 
-    <h1>Secure Project List</h1>
+    <h1>Project Directory</h1>
 
-    <div class="grid">
-        <a href="https://65kjbnlk536h5j6iyfuy42kg6l.vercel.app" class="card">65kjbnlk536h5j6iyfuy42kg6l.vercel.app</a>
-        <a href="https://74686973697361686578.vercel.app" class="card">74686973697361686578.vercel.app</a>
-        <a href="https://bcdef0123456789abcde.vercel.app" class="card">bcdef0123456789abcde.vercel.app</a>
-        <a href="https://1a2b3c4d5e6f708192a3.vercel.app" class="card">1a2b3c4d5e6f708192a3.vercel.app</a>
-        <a href="https://f0e1d2c3b4a596877869.vercel.app" class="card">f0e1d2c3b4a596877869.vercel.app</a>
-        <a href="https://8c7b6a594d3c2e1f0a9b.vercel.app" class="card">8c7b6a594d3c2e1f0a9b.vercel.app</a>
-        <a href="https://550e8400e29b41d4a716.vercel.app" class="card">550e8400e29b41d4a716.vercel.app</a>
-        <a href="https://d9e8f7a6b5c4d3e2f1a0.vercel.app" class="card">d9e8f7a6b5c4d3e2f1a0.vercel.app</a>
-        <a href="https://a1b2c3d4e5f60718293a.vercel.app" class="card">a1b2c3d4e5f60718293a.vercel.app</a>
-        <a href="https://3f2a8d1e9c0b4f5a6e7d.vercel.app" class="card">3f2a8d1e9c0b4f5a6e7d.vercel.app</a>
-    </div>
+    <div class="grid" id="linkGrid">
+        </div>
+
+    <script>
+        const links = [
+            "65kjbnlk536h5j6iyfuy42kg6l.vercel.app",
+            "74686973697361686578.vercel.app",
+            "bcdef0123456789abcde.vercel.app",
+            "1a2b3c4d5e6f708192a3.vercel.app",
+            "f0e1d2c3b4a596877869.vercel.app",
+            "8c7b6a594d3c2e1f0a9b.vercel.app",
+            "550e8400e29b41d4a716.vercel.app",
+            "d9e8f7a6b5c4d3e2f1a0.vercel.app",
+            "a1b2c3d4e5f60718293a.vercel.app",
+            "3f2a8d1e9c0b4f5a6e7d.vercel.app"
+        ];
+
+        const grid = document.getElementById('linkGrid');
+
+        links.forEach(url => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `
+                <a href="https://${url}" target="_blank" class="link-text">${url}</a>
+                <button class="copy-btn" onclick="copyToClipboard('${url}', this)" title="Copy Link">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                </button>
+            `;
+            grid.appendChild(div);
+        });
+
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText('https://' + text).then(() => {
+                btn.classList.add('active');
+                setTimeout(() => btn.classList.remove('active'), 1500);
+            });
+        }
+    </script>
 
 </body>
 </html>
